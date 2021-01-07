@@ -91,14 +91,7 @@ exports.getAllReservations = getAllReservations;
  * @return {Promise<[{}]>}  A promise to the properties.
  */
 const getAllProperties = function(options, limit = 10) {
-  // return pool.query(`
-  // SELECT *
-  // FROM properties
-  // LIMIT $1
-  // `, [limit])
-  // .then(res => res.rows);
-
-  // initial query parameters
+  
   const queryParams = [];
 
   // initial query string
@@ -194,6 +187,6 @@ const addProperty = function(property) {
   VALUES ($14, $1, $2, $7, $8, $6, $9, $11, $12, $13, $10, $5, $3, $4)
   RETURNING *;
   `, propertyValues)
-  .then(res => res.rows[0])  
+  .then(res => res.rows[0]);
 }
 exports.addProperty = addProperty;
