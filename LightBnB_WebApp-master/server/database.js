@@ -174,17 +174,26 @@ const getAllProperties = function(options, limit = 10) {
 exports.getAllProperties = getAllProperties;
 
 
-
-
 /**
  * Add a property to the database
  * @param {{}} property An object containing all of the property details.
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+  
+  const propertyValues = Object.values(property);
+  // the order of the array
+  // [ 1.title , 2.desc, 3.numBed, 4.numBath, 5.parking, 6.cost,
+  // 7.thumb, 8.cover, 9.street, 10.country, 11.city, 12.province, 13.post, 14.owner_id]
+
+  return pool.query(`
+  INSERT INTO properties (owner_id, title, description,
+    thumbnail_photo_url, cover_photo_url, cost_per_night, 
+    street, city, province, post_code, country, 
+    parking_spaces, number_of_bathrooms, number_of_bedrooms)
+  VALUES ($14, $1, $2, $7, $8, $6, $9, $11, $12, $13, $10, $5, $3, $4)
+  RETURNING *;
+  `, propertyValues)
+  .then(res => res.rows[0])  
 }
 exports.addProperty = addProperty;
